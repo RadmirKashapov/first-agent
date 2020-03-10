@@ -15,6 +15,18 @@ def table_pages(source):
     pages = source.xpath("//ul/li/a/@href")
     return list(set(pages))
 
+def get_data(agent, link):
+    table_data = []
+
+    source_code = get_source_code(agent, link)
+    pages = table_pages(source_code)
+
+    for page in pages:
+        full_link = link + page
+        agent.get(full_link)
+
+    return table_data
+
 if __name__ == "__main__":
     driver = get_driver()
     urls = [
@@ -24,7 +36,6 @@ if __name__ == "__main__":
     ]
 
     for url in urls:
-        source_code = get_source_code(driver, url)
-        print(table_pages(source_code))
+        data = get_data(driver, url)
 
     driver.close()
