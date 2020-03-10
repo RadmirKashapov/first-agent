@@ -3,7 +3,7 @@ import time
 from lxml.html import fromstring
 
 def get_driver():
-    agent = webdriver.Chrome(executable_path="./chromedriver")
+    agent = webdriver.Chrome(executable_path="./resources/chromedriver")
     return agent
 
 def get_source_code(agent, link):
