@@ -1,6 +1,7 @@
 from selenium import webdriver
 import time
 from lxml.html import fromstring
+import json
 
 def get_driver():
     agent = webdriver.Chrome(executable_path="./resources/chromedriver")
@@ -36,6 +37,22 @@ def get_data(agent, link):
 
     return table_data
 
+def get_merge_data(all_data):
+    result = dict()
+
+    for item in all_data:
+        if result.get(item["Name"]):
+            result[item["Name"]] = {**result[item["Name"]], **item}
+        else:
+            result[item["Name"]] = item
+        
+        return result
+
+def save_json(all_data):
+    with open("resources/npps.json", "w", encoding="utf-8") as f:
+        json.dump(all_data, f, indent=4)
+
+
 if __name__ == "__main__":
     driver = get_driver()
     urls = [
@@ -44,8 +61,12 @@ if __name__ == "__main__":
         "http://kaf65.mephi.ru/tutorial/datasource_third/"
     ]
 
+    sandbox = []
+
     for url in urls:
         data = get_data(driver, url)
-        print(data)
+        sandbox += data
 
     driver.close()
+    merge_data = get_merge_data(sandbox)
+    save_json(merge_data)
